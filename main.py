@@ -7,9 +7,16 @@ class Query:
         if self.type == 'add':
             self.name = query[2]
 
+class Cont:
+    def __init__(self, number, name):
+        self.number = number
+        self.name = name
+
 def read_queries():
-    n = int(input())
-    return [Query(input().split()) for i in range(n)]
+    # n = int(input())
+    # return [Query(input().split()) for i in range(n)]
+    return [Query(["add",123,"Bob"]),Query(["add",321,"Obo"]),Query(["add",222,"SDS"])]
+
 
 def write_responses(result):
     print('\n'.join(result))
@@ -17,7 +24,11 @@ def write_responses(result):
 def process_queries(queries):
     result = []
     # Keep list of all existing (i.e. not deleted yet) contacts.
-    contacts = []
+    contacts = [Cont(i.number, i.name) for i in queries]
+
+    for i in contacts:
+        print(i.number, i.name)
+        
     for cur_query in queries:
         if cur_query.type == 'add':
             # if we already have contact with such number,
