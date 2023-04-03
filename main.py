@@ -61,11 +61,33 @@ def read_queries():
     #         Query(["add",660,"ged"]),
     #         Query(["add",896,"vdv"]),
     #         Query(["find",660]),
-    #         Query(["find",000]),]
+    #         Query(["find",000]),
+    #         Query(["del",523]),]
+#######################################################
+    # return [Query(["add",911,"police"]),
+    #         Query(["add",76213,"Mom"]),
+    #         Query(["add",17239,"Bob"]),
+    #         Query(["find",76213]),
+    #         Query(["find",910]),
+    #         Query(["find",911]),
+    #         Query(["del",910]),
+    #         Query(["del",911]),
+    #         Query(["find",911]),
+    #         Query(["find",76213]),
+    #         Query(["add",76213,"daddy"]),
+    #         Query(["find",76213]),]
+#######################################################
+    # return [Query(["find",3839442]),
+    #         Query(["add",123456,"me"]),
+    #         Query(["add",0,"granny"]),
+    #         Query(["find",123456]),
+    #         Query(["find",123456]),
+    #         Query(["del",0]),
+    #         Query(["del",0]),
+    #         Query(["find",0]),]
 
 
 def write_responses(result):
-    print()
     print('\n'.join(result))
 
 def process_queries(queries):
@@ -75,7 +97,6 @@ def process_queries(queries):
         if cur_query.type == 'add':
             size = size + 1
     
-    print(size)
     # declare emply hash table
     hash_table = [[] for i in range(size)]
     
@@ -88,20 +109,11 @@ def process_queries(queries):
     def hash_function(number):
         return ((a * hash(number) + b) % p) % size
     
-
     result = []
-    # Keep list of all existing (i.e. not deleted yet) contacts.
-    # contacts = [Cont(i.number, i.name) for i in queries]
-    # contacts = []
-    # contacts = [[i.number,i.name] for i in queries]
-    # for i in contacts:
-    #     print(i)
 
     for cur_query in queries:
         if cur_query.type == 'add':
             hashed_index = hash_function(cur_query.number)
-            # if we already have contact with such number,
-            # we should rewrite contact's name
             for i in hash_table[hashed_index]:
                 if i[0] == cur_query.number:
                     i[1] = cur_query.name
@@ -113,36 +125,20 @@ def process_queries(queries):
 
         elif cur_query.type == 'del':
             hashed_index = hash_function(cur_query.number)
-            for i in hash_table[hashed_index]:
-                if cur_query.number in i:
-                    hash_table.remove[i]
-                    print("removed")
+            for sublist_index, sublist in enumerate(hash_table[hashed_index]):
+                if cur_query.number in sublist:
+                    del hash_table[hashed_index][sublist_index]
                     continue
-
-
 
         elif cur_query.type == 'find':
             hashed_index = hash_function(cur_query.number)
-            k=0
-            for i in hash_table[hashed_index]:
-                if i[0] == cur_query.number:
-                    # return i[1]
-                    print(i[1])
-                    result.append(i[1])
-                    k=k + 1
-            if k==0: 
-                print("not found")
+            for sublist in hash_table[hashed_index]:
+                if sublist[0] == cur_query.number:
+                    result.append(sublist[1])
+                    break
+            else:
                 result.append("not found")
-        
-        # else:
-        #     response = 'not found'
-        #     print("not found")
-        #     for contact in contacts:
-        #         if contact.number == cur_query.number:
-        #             response = contact.name
-        #             break
-        #     result.append(response)
-        # print("not asdasd", cur_query.type)
+
     return result
 
 if __name__ == '__main__':
