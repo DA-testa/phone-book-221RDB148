@@ -17,26 +17,30 @@ def read_queries():
     # return [Query(input().split()) for i in range(n)]
     return [Query(["add",123,"Bob"]),Query(["add",321,"Obo"]),Query(["add",222,"SDS"])]
 
-
 def write_responses(result):
     print('\n'.join(result))
 
 def process_queries(queries):
     result = []
     # Keep list of all existing (i.e. not deleted yet) contacts.
-    contacts = [Cont(i.number, i.name) for i in queries]
+
+    # contacts = [Cont(i.number, i.name) for i in queries]
+    # contacts = []
+    contacts = [[i.number,i.name] for i in queries]
 
     for i in contacts:
-        print(i.number, i.name)
+        print(i)
         
     for cur_query in queries:
         if cur_query.type == 'add':
             # if we already have contact with such number,
             # we should rewrite contact's name
             for contact in contacts:
-                if contact.number == cur_query.number:
-                    contact.name = cur_query.name
-                    break
+                # if contact.number == cur_query.number:
+                #     contact.name = cur_query.name
+                #     break
+                if contact[0] == cur_query.number:
+                    contact[1] = cur_query.name
             else: # otherwise, just add it
                 contacts.append(cur_query)
         elif cur_query.type == 'del':
@@ -44,6 +48,8 @@ def process_queries(queries):
                 if contacts[j].number == cur_query.number:
                     contacts.pop(j)
                     break
+        elif cur_query.type == 'find':
+            pass
         else:
             response = 'not found'
             for contact in contacts:
