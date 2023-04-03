@@ -47,7 +47,7 @@ def hash_add(number, name):
         if i[0] == number:
             i[1] = name
             return
-    table[index].append([number, number])
+    table[index].append([number, name])
 
 def hash_get(number):
     global table
